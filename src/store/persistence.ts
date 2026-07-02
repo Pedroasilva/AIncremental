@@ -28,9 +28,13 @@ function migrate(raw: unknown): GameState {
   // Future migrations: while (state.version < SAVE_VERSION) { ... }
   state.version = SAVE_VERSION;
   const base = initialState();
+  // Drop legacy log entries stored as plain text (pre-i18n): they have no
+  // translation key and would show frozen in the old language. Keep only
+  // translatable, keyed entries.
+  const log = Array.isArray(state.log) ? state.log.filter((e) => !!e && !!e.key) : [];
   // Shallow-merge top level, but deep-merge settings so new fields (locale,
   // muted, volume) survive on saves created before they existed.
-  return { ...base, ...state, settings: { ...base.settings, ...state.settings } };
+  return { ...base, ...state, log, settings: { ...base.settings, ...state.settings } };
 }
 
 export async function loadGame(): Promise<GameState> {
