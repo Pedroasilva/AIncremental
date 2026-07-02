@@ -16,6 +16,8 @@ export default defineConfig({
       '@ui': fileURLToPath(new URL('./src/ui', import.meta.url)),
       '@render': fileURLToPath(new URL('./src/render', import.meta.url)),
       '@hooks': fileURLToPath(new URL('./src/hooks', import.meta.url)),
+      '@i18n': fileURLToPath(new URL('./src/i18n', import.meta.url)),
+      '@sound': fileURLToPath(new URL('./src/sound', import.meta.url)),
       '@lib': fileURLToPath(new URL('./src/lib', import.meta.url)),
     },
   },

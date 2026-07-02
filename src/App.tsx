@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useGame } from '@store/gameStore';
 import { useGameLoop } from '@hooks/useGameLoop';
+import { useT } from '@i18n/useT';
+import { useSound } from '@sound/useSound';
 import { ResourceBar } from '@ui/resources/ResourceBar';
 import { VerbPanel } from '@ui/verbs/VerbPanel';
 import { ProducerPanel } from '@ui/producers/ProducerPanel';
@@ -11,6 +13,7 @@ import { LogPanel } from '@ui/log/LogPanel';
 import { CoreCanvas } from '@render/CoreCanvas';
 import { OfflineModal } from '@ui/common/OfflineModal';
 import { SettingsMenu } from '@ui/layout/SettingsMenu';
+import { LanguageSelector } from '@ui/layout/LanguageSelector';
 
 type Tab = 'palco' | 'pesquisa' | 'agentes';
 
@@ -18,6 +21,9 @@ export default function App() {
   const init = useGame((s) => s.init);
   const ready = useGame((s) => s.ready);
   const reducedMotion = useGame((s) => s.state.settings.reducedMotion);
+  const locale = useGame((s) => s.state.settings.locale);
+  const t = useT();
+  useSound(); // keep the sound manager in sync with settings
   const [tab, setTab] = useState<Tab>('palco');
 
   useEffect(() => {
@@ -28,12 +34,16 @@ export default function App() {
     document.documentElement.dataset.reducedMotion = reducedMotion ? 'true' : 'false';
   }, [reducedMotion]);
 
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   useGameLoop();
 
   if (!ready) {
     return (
       <div className="flex h-full items-center justify-center text-muted">
-        <span className="animate-breathe text-lg">Inicializando a IA…</span>
+        <span className="animate-breathe text-lg">{t('app.loading')}</span>
       </div>
     );
   }
@@ -43,7 +53,8 @@ export default function App() {
       {/* top bar */}
       <header className="glass z-20 flex items-center justify-between border-b border-border">
         <ResourceBar />
-        <div className="px-3">
+        <div className="flex items-center gap-2 px-3">
+          <LanguageSelector />
           <SettingsMenu />
         </div>
       </header>
@@ -60,15 +71,15 @@ export default function App() {
         {/* center: stage with tabs */}
         <div className="flex min-h-0 flex-col rounded-xl border border-border bg-surface/40">
           <div className="flex gap-1 border-b border-border p-2">
-            {(['palco', 'pesquisa', 'agentes'] as Tab[]).map((t) => (
+            {(['palco', 'pesquisa', 'agentes'] as Tab[]).map((tabId) => (
               <button
-                key={t}
-                onClick={() => setTab(t)}
+                key={tabId}
+                onClick={() => setTab(tabId)}
                 className={`rounded-lg px-3 py-1.5 text-sm capitalize transition ${
-                  tab === t ? 'bg-surface-2 text-text' : 'text-muted hover:text-text'
+                  tab === tabId ? 'bg-surface-2 text-text' : 'text-muted hover:text-text'
                 }`}
               >
-                {t}
+                {t(`tab.${tabId}`)}
               </button>
             ))}
           </div>

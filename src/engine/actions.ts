@@ -65,7 +65,7 @@ export function trainModel(state: GameState): boolean {
   addRes(state, 'knowledge', p.knowledge.neg());
   state.modelTier += 1;
   checkUnlocks(state);
-  pushLog(state, 'emergence', `Modelo treinado: ${getModel(state.modelTier).name} (tier ${state.modelTier})`);
+  pushLog(state, 'emergence', 'log.trained', { name: getModel(state.modelTier).name, tier: state.modelTier });
   return true;
 }
 
@@ -83,7 +83,7 @@ export function openNode(state: GameState, id: string): boolean {
   if (!node || !canOpenNode(state, id)) return false;
   addRes(state, 'knowledge', D(node.cost).neg());
   state.research = [...state.research, id];
-  pushLog(state, 'gain', `Investigado: "${node.name}"`);
+  pushLog(state, 'gain', 'log.investigated', { id });
   return true;
 }
 
@@ -102,7 +102,7 @@ export function hireAgent(state: GameState, role: AgentRole): boolean {
   const def = getRole(role);
   const agent = { id: `${role}-${Date.now()}-${state.agents.length}`, role, priority: 0.5 };
   state.agents = [...state.agents, agent];
-  pushLog(state, 'info', `Agente empregado: ${def.name} ${def.icon}`);
+  pushLog(state, 'info', 'log.hired', { role, icon: def.icon });
   return true;
 }
 
@@ -139,7 +139,7 @@ export function prestige(state: GameState): GameState {
   fresh.settings = state.settings;
   // Keep the game feeling faster: prestige flag stays available after first unlock.
   fresh.flags['prestige'] = true;
-  pushLog(fresh, 'emergence', `Retreinado! +${gain.toString()} Parâmetros (Θ). Run #${fresh.prestige.totalRuns}`);
+  pushLog(fresh, 'emergence', 'log.prestiged', { gain: gain.toString(), run: fresh.prestige.totalRuns });
   setRes(fresh, 'tokens', D(15).add(keptParams.mul(5)));
   return fresh;
 }

@@ -36,7 +36,7 @@ export function initialState(): GameState {
     context: { load: 0, window: getModel(0).window, hallucination: 0 },
     lifetime: { knowledge: encode(ZERO), understanding: encode(ZERO) },
     prestige: { params: encode(ZERO), metaTree: {}, totalRuns: 0 },
-    settings: { reducedMotion: false, theme: 'dark' },
+    settings: { reducedMotion: false, theme: 'dark', locale: 'pt-BR', muted: false, volume: 0.6 },
     flags: { 'verb:think': true },
     log: [],
     seed: (Math.random() * 2 ** 31) | 0,

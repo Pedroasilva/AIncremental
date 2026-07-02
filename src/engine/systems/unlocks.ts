@@ -14,16 +14,18 @@ export function checkUnlocks(state: GameState): void {
   }
 }
 
+const ANNOUNCED_FLAGS = new Set([
+  'verb:investigate',
+  'verb:analyze',
+  'verb:plan',
+  'data',
+  'agents',
+  'prestige',
+  'singularity',
+]);
+
 function announce(state: GameState, flag: string): void {
-  const messages: Record<string, string> = {
-    'verb:investigate': 'Nova capacidade desbloqueada: Investigar 🔍',
-    'verb:analyze': 'Nova capacidade desbloqueada: Analisar 📊',
-    'verb:plan': 'Nova capacidade desbloqueada: Planejar 🗺️',
-    data: 'Coleta de dados iniciada 📦',
-    agents: 'Você já pode empregar Agentes 🤖',
-    prestige: 'Retreinar (prestígio) está disponível ⚙️',
-    singularity: 'A Singularidade se aproxima ✦',
-  };
-  const msg = messages[flag];
-  if (msg) pushLog(state, 'emergence', msg);
+  if (ANNOUNCED_FLAGS.has(flag)) {
+    pushLog(state, 'emergence', `log.unlock.${flag}`);
+  }
 }

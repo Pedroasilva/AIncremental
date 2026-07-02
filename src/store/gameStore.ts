@@ -14,6 +14,7 @@ import {
   type GameState,
   type ProducerId,
   type AgentRole,
+  type Locale,
 } from '@engine/index';
 import { loadGame, saveGame, exportSave, importSave } from './persistence';
 import { pushLog } from '@engine/log';
@@ -42,6 +43,9 @@ interface GameStore {
   setPriority: (id: string, p: number) => void;
   doPrestige: () => void;
   toggleReducedMotion: () => void;
+  setLocale: (locale: Locale) => void;
+  toggleMute: () => void;
+  setVolume: (v: number) => void;
   exportSave: () => string;
   importSave: (b64: string) => void;
   hardReset: () => void;
@@ -127,6 +131,21 @@ export const useGame = create<GameStore>((set, get) => ({
       s.settings.reducedMotion = !s.settings.reducedMotion;
     });
   },
+  setLocale(locale) {
+    mutate(get, set, (s) => {
+      s.settings.locale = locale;
+    });
+  },
+  toggleMute() {
+    mutate(get, set, (s) => {
+      s.settings.muted = !s.settings.muted;
+    });
+  },
+  setVolume(v) {
+    mutate(get, set, (s) => {
+      s.settings.volume = Math.max(0, Math.min(v, 1));
+    });
+  },
 
   exportSave() {
     return exportSave(get().state);
@@ -138,7 +157,7 @@ export const useGame = create<GameStore>((set, get) => ({
       set({ state: s });
     } catch {
       const s = clone(get().state);
-      pushLog(s, 'warn', 'Falha ao importar save (formato inválido).');
+      pushLog(s, 'warn', 'log.importFailed');
       set({ state: s });
     }
   },

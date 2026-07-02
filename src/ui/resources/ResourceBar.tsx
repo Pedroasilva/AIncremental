@@ -2,19 +2,21 @@ import { useGame } from '@store/gameStore';
 import { rates } from '@store/selectors';
 import { res, getModel, type ResourceId } from '@engine/index';
 import { fmt, fmtRate } from '@lib/format';
+import { useT } from '@i18n/useT';
 
-const META: { id: ResourceId; icon: string; label: string; color: string; flag?: string }[] = [
-  { id: 'compute', icon: '⚡', label: 'Compute', color: 'var(--c-compute)' },
-  { id: 'tokens', icon: '◈', label: 'Tokens', color: 'var(--c-token)' },
-  { id: 'thoughts', icon: '🧠', label: 'Pensamentos', color: 'var(--c-thought)' },
-  { id: 'knowledge', icon: '🔍', label: 'Conhecimento', color: 'var(--c-knowledge)', flag: 'verb:investigate' },
-  { id: 'data', icon: '📦', label: 'Dados', color: 'var(--c-data)', flag: 'data' },
-  { id: 'understanding', icon: '📊', label: 'Entendimento', color: 'var(--c-understanding)', flag: 'verb:analyze' },
-  { id: 'plans', icon: '🗺️', label: 'Planos', color: 'var(--c-plans)', flag: 'verb:plan' },
+const META: { id: ResourceId; icon: string; color: string; flag?: string }[] = [
+  { id: 'compute', icon: '⚡', color: 'var(--c-compute)' },
+  { id: 'tokens', icon: '◈', color: 'var(--c-token)' },
+  { id: 'thoughts', icon: '🧠', color: 'var(--c-thought)' },
+  { id: 'knowledge', icon: '🔍', color: 'var(--c-knowledge)', flag: 'verb:investigate' },
+  { id: 'data', icon: '📦', color: 'var(--c-data)', flag: 'data' },
+  { id: 'understanding', icon: '📊', color: 'var(--c-understanding)', flag: 'verb:analyze' },
+  { id: 'plans', icon: '🗺️', color: 'var(--c-plans)', flag: 'verb:plan' },
 ];
 
 export function ResourceBar() {
   const state = useGame((s) => s.state);
+  const t = useT();
   const r = rates(state);
   const model = getModel(state.modelTier);
 
@@ -36,7 +38,7 @@ export function ResourceBar() {
           <div
             key={m.id}
             className="glass flex items-center gap-2 rounded-lg px-3 py-1.5"
-            title={m.label}
+            title={t(`resource.${m.id}`)}
           >
             <span style={{ color: m.color }}>{m.icon}</span>
             <div className="leading-tight">

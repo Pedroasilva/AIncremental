@@ -24,6 +24,8 @@
       "@ui/*": ["src/ui/*"],
       "@render/*": ["src/render/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@i18n/*": ["src/i18n/*"],
+      "@sound/*": ["src/sound/*"],
       "@lib/*": ["src/lib/*"]
     }
   },

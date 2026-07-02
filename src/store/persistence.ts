@@ -27,7 +27,10 @@ function migrate(raw: unknown): GameState {
   if (typeof state.version !== 'number') return initialState();
   // Future migrations: while (state.version < SAVE_VERSION) { ... }
   state.version = SAVE_VERSION;
-  return { ...initialState(), ...state };
+  const base = initialState();
+  // Shallow-merge top level, but deep-merge settings so new fields (locale,
+  // muted, volume) survive on saves created before they existed.
+  return { ...base, ...state, settings: { ...base.settings, ...state.settings } };
 }
 
 export async function loadGame(): Promise<GameState> {

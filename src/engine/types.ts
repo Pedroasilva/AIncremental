@@ -38,15 +38,24 @@ export interface PrestigeState {
   totalRuns: number;
 }
 
+export type Locale = 'pt-BR' | 'en-US';
+
 export interface Settings {
   reducedMotion: boolean;
   theme: 'dark' | 'light';
+  locale: Locale;
+  muted: boolean;
+  volume: number; // 0..1
 }
 
 export interface LogEntry {
   id: number;
   kind: 'info' | 'gain' | 'warn' | 'emergence';
-  text: string;
+  /** i18n key rendered by the UI with `vars`. */
+  key: string;
+  vars?: Record<string, string | number>;
+  /** Legacy/plain text (older saves) — used as fallback if no key. */
+  text?: string;
   t: number;
 }
 

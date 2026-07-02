@@ -1,26 +1,31 @@
 import { useState } from 'react';
 import { useGame } from '@store/gameStore';
+import { useT } from '@i18n/useT';
+import { LanguageSelector } from './LanguageSelector';
 
 export function SettingsMenu() {
   const [open, setOpen] = useState(false);
   const state = useGame((s) => s.state);
-  const { save, exportSave, importSave, hardReset, toggleReducedMotion } = useGame();
+  const { save, exportSave, importSave, hardReset, toggleReducedMotion, toggleMute } = useGame();
+  const t = useT();
+
+  const onState = (v: boolean) => (v ? t('state.on') : t('state.off'));
 
   const doExport = async () => {
     const code = exportSave();
     try {
       await navigator.clipboard.writeText(code);
-      alert('Save copiado para a área de transferência.');
+      alert(t('settings.exported'));
     } catch {
-      prompt('Copie seu save:', code);
+      prompt(t('settings.exportPrompt'), code);
     }
   };
   const doImport = () => {
-    const code = prompt('Cole o código do save:');
+    const code = prompt(t('settings.importPrompt'));
     if (code) importSave(code.trim());
   };
   const doReset = () => {
-    if (confirm('Apagar TODO o progresso? Isto não pode ser desfeito.')) hardReset();
+    if (confirm(t('settings.resetConfirm'))) hardReset();
   };
 
   return (
@@ -28,20 +33,27 @@ export function SettingsMenu() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm transition hover:border-accent"
+        aria-label="settings"
       >
         ⚙︎
       </button>
       {open && (
-        <div className="glass absolute right-0 top-10 z-40 w-52 rounded-xl p-2 text-sm">
-          <MenuItem label="💾 Salvar agora" onClick={save} />
-          <MenuItem label="📤 Exportar save" onClick={doExport} />
-          <MenuItem label="📥 Importar save" onClick={doImport} />
+        <div className="glass absolute right-0 top-10 z-40 w-56 rounded-xl p-2 text-sm">
+          <div className="px-2 pb-1 text-[10px] uppercase tracking-wide text-muted">{t('settings.language')}</div>
+          <div className="px-2 pb-2">
+            <LanguageSelector />
+          </div>
+          <div className="my-1 h-px bg-border" />
+          <MenuItem label={t('settings.saveNow')} onClick={save} />
+          <MenuItem label={t('settings.export')} onClick={doExport} />
+          <MenuItem label={t('settings.import')} onClick={doImport} />
+          <MenuItem label={t('settings.sound', { state: onState(!state.settings.muted) })} onClick={toggleMute} />
           <MenuItem
-            label={`🎬 Reduzir animações: ${state.settings.reducedMotion ? 'ON' : 'OFF'}`}
+            label={t('settings.reducedMotion', { state: onState(state.settings.reducedMotion) })}
             onClick={toggleReducedMotion}
           />
           <div className="my-1 h-px bg-border" />
-          <MenuItem label="🗑 Resetar tudo" onClick={doReset} danger />
+          <MenuItem label={t('settings.reset')} onClick={doReset} danger />
         </div>
       )}
     </div>
