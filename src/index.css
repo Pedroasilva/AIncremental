@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* surfaces */
+  --bg: #0b0e14;
+  --surface: #151a23;
+  --surface-2: #1d2430;
+  --border: #263041;
+  /* text */
+  --text: #e6eaf2;
+  --text-muted: #97a2b6;
+  /* accents */
+  --accent: #3dd6d0;
+  --accent-2: #8b7bf0;
+  --success: #5ee6a8;
+  --warn: #ffb020;
+  --danger: #ff5c5c;
+  /* per-resource colors */
+  --c-compute: #7fb4ff;
+  --c-token: #3dd6d0;
+  --c-thought: #c08bff;
+  --c-knowledge: #5ee6a8;
+  --c-data: #ffc978;
+  --c-understanding: #8b7bf0;
+  --c-plans: #ff9dd6;
+}
+
+[data-theme='light'] {
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-2: #eef2f8;
+  --border: #d7deea;
+  --text: #101623;
+  --text-muted: #55617a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Thin, themed scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glass {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+}
