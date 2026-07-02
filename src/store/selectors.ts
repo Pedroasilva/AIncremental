@@ -2,6 +2,7 @@ import {
   computeModifiers,
   computePerSecond,
   tokensPerSecond,
+  thoughtsPerSecond,
   res,
   type GameState,
   Decimal,
@@ -13,6 +14,7 @@ export function rates(state: GameState) {
   return {
     compute: computePerSecond(state, mods),
     tokens: tokensPerSecond(state, mods),
+    thoughts: thoughtsPerSecond(state, mods),
     mods,
   };
 }

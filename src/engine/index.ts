@@ -5,7 +5,7 @@ export { initialState, res, RESOURCE_IDS, SAVE_VERSION } from './state';
 export { tick, catchUp, TICK_HZ, STEP } from './tick';
 export { computeModifiers } from './modifiers';
 export type { Modifiers } from './modifiers';
-export { computePerSecond, tokensPerSecond } from './systems/production';
+export { computePerSecond, tokensPerSecond, thoughtsPerSecond } from './systems/production';
 export { VERB_COST } from './systems/verbs';
 export { getModel, maxTier } from '@content/models';
 export { PRODUCERS, getProducer } from '@content/producers';

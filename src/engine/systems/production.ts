@@ -20,10 +20,21 @@ export function tokensPerSecond(state: GameState, mods: Modifiers) {
   return compute.mul(mods.inferenceRate).mul(mods.tokenMult);
 }
 
-/** Idle production step: compute -> tokens, plus passive data if unlocked. */
+/**
+ * Passive "background thinking": the AI always thinks a little on its own,
+ * scaling with compute and model quality. Gives idle Thought progression from
+ * the very start, instead of relying only on clicks / tier-4 agents.
+ */
+export function thoughtsPerSecond(state: GameState, mods: Modifiers) {
+  return computePerSecond(state, mods).mul(mods.quality).mul(0.2);
+}
+
+/** Idle production step: compute -> tokens + passive thoughts (and data if unlocked). */
 export function produce(state: GameState, dt: number, mods: Modifiers): void {
-  addRes(state, 'compute', computePerSecond(state, mods).mul(dt));
-  addRes(state, 'tokens', tokensPerSecond(state, mods).mul(dt));
+  const cps = computePerSecond(state, mods);
+  addRes(state, 'compute', cps.mul(dt));
+  addRes(state, 'tokens', cps.mul(mods.inferenceRate).mul(mods.tokenMult).mul(dt));
+  addRes(state, 'thoughts', cps.mul(mods.quality).mul(0.2).mul(dt));
 
   if (state.flags['data'] || state.research.includes('crawling')) {
     // Passive data trickle once data collection exists.

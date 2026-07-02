@@ -33,7 +33,14 @@ export function ResourceBar() {
       {META.map((m) => {
         if (m.flag && !state.flags[m.flag]) return null;
         const value = res(state, m.id);
-        const rate = m.id === 'compute' ? r.compute : m.id === 'tokens' ? r.tokens : null;
+        const rate =
+          m.id === 'compute'
+            ? r.compute
+            : m.id === 'tokens'
+              ? r.tokens
+              : m.id === 'thoughts'
+                ? r.thoughts
+                : null;
         return (
           <div
             key={m.id}
